@@ -9,13 +9,13 @@ import Stepper from "@/components/ui/stepper";
 import {View} from "lucide-react";
 import { toast } from "sonner"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from "@/components/ui/dialog";
+    useModal,
+    ModalBody,
+    ModalContent,
+    ModalFooter
+} from "@/components/ui/animated-modal";
+import BetterButton from "@/components/ui/better-button";
+
 
 const LevelInfo = ({viewProps, onHint, onAnswer}:{viewProps:Map3DCameraProps,onHint:(coordinate:Map3DCameraProps)=>void,onAnswer:(coordinate: Map3DCameraProps)=>void})=>{
     const question = useGameStore(state=>state.tourDetail!.question)
@@ -23,29 +23,36 @@ const LevelInfo = ({viewProps, onHint, onAnswer}:{viewProps:Map3DCameraProps,onH
     const nextQuestion = useGameStore(state=>state.nextQuestion)
     const attraction = attractions[question]
     const quitTour = useGameStore(state=>state.quitTour)
-    const [openDialog, setOpenDialog] = useState<boolean>(false)
+    //const [openDialog, setOpenDialog] = useState<boolean>(false)
+    const modal = useModal()
+
 
 
     const takeImage = ()=>{
         if(isViewRight()){
-            setOpenDialog(true)
+            //setOpenDialog(true)
+            modal.setOpen(true)
         }else{
-            toast("The view you took is not right.")
+            toast.error("The view you took is not right.")
         }
     }
 
     const isViewRight=():boolean=>{
-        return true
-        if(Math.abs(viewProps.center.lat-attraction.coordinate.center.lat)>0.002){
+        const range:number = attraction.coordinate.range
+        if(Math.abs(viewProps.center.lat-attraction.coordinate.center.lat)>0.002/200*range){
+            console.log("lat not right")
             return false
         }
-        if(Math.abs(viewProps.center.lng-attraction.coordinate.center.lng)>0.002){
+        if(Math.abs(viewProps.center.lng-attraction.coordinate.center.lng)>0.002/200*range){
+            console.log("lng not right")
             return false
         }
         if(Math.abs(viewProps.heading-attraction.coordinate.heading)>15){
+            console.log("heading not right")
             return false
         }
         if(Math.abs(viewProps.center.altitude-attraction.coordinate.center.altitude)>200){
+            console.log("altitude not right")
             return false
         }
         return true
@@ -53,52 +60,53 @@ const LevelInfo = ({viewProps, onHint, onAnswer}:{viewProps:Map3DCameraProps,onH
 
 
     return (
-        <div className={"flex flex-col w-1/2"}>
-            <Stepper total={attractions.length} question={question}/>
-            <div className={"flex justify-center h-1/2"}>
-                <img className={"h-full"} src={`./images/${attraction.image}.jpg`}/>
-            </div>
-            <p className={"text-xs text-neutral-400 p-1 text-center"}>{attraction.attribution}</p>
-                <div className={"flex justify-around py-6"}>
-                <Button className={"w-32"} onClick={takeImage} size={"lg"}>
-                    <Camera/> Take Photo
-                </Button>
-                <Button className={"w-32"} variant={"secondary"} size={"lg"} onClick={() => {
+
+            <div className={"flex flex-col w-1/2 items-center gap-4"}>
+                <Stepper total={attractions.length} question={question}/>
+                <div className={"flex justify-center h-1/2"}>
+                    <img className={"h-full"} src={`./images/${attraction.image}.jpg`}/>
+                </div>
+                <p className={"text-xs text-neutral-400 p-1 text-center"}>attribution: {attraction.attribution}</p>
+                <BetterButton description={"Take Photo"} onClick={takeImage} v={"one"}>
+                    <Camera/>
+                </BetterButton>
+                <BetterButton description={"Hint"} v={"two"} onClick={() => {
                     onHint(attraction.coordinate)
                 }}>
-                    <View/> Hint
-                </Button>
-                    <Button className={"w-32"} variant={"destructive"} size={"lg"} onClick={() => {
-                        onAnswer(attraction.coordinate)
-                        setTimeout(()=>{
-                            setOpenDialog(true)
-                        },3000)
-                    }}>
-                        <Eye/> Reveal
-                    </Button>
+                    <View/>
+                </BetterButton>
 
+                <BetterButton description={"Reveal"} v={"three"} onClick={() => {
+                    onAnswer(attraction.coordinate)
+                    setTimeout(() => {
+                        modal.setOpen(true)
+                        //setOpenDialog(true)
+                    }, 3000)
+                }}>
+                    <Eye/>
+                </BetterButton>
+
+
+                <ModalBody className={"h-min"}>
+                    <ModalContent>
+                        <div className={"flex flex-col"}>
+                            <h1 className={"text-2xl font-black mb-4"}>{attraction.name}</h1>
+                            <p className={"text-sm"}>{attraction.description}</p>
+                        </div>
+                    </ModalContent>
+                    <ModalFooter>
+                        <Button onClick={() => {
+                            modal.setOpen(false)
+                            if (question == attractions.length - 1) {
+                                quitTour()
+                            } else {
+                                nextQuestion()
+                            }
+                        }}>OK</Button>
+                    </ModalFooter>
+                </ModalBody>
             </div>
-            <Dialog open={openDialog}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{attraction.name}</DialogTitle>
-                        <DialogDescription>
-                            {attraction.description}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <Button size={"default"} onClick={() => {
-                        setOpenDialog(false)
-                        if (question == attractions.length - 1) {
-                            quitTour()
-                        } else {
-                            nextQuestion()
-                        }
-                    }}>OK</Button>
-                </DialogContent>
-            </Dialog>
-        </div>
     )
 }
-
 
 export default LevelInfo

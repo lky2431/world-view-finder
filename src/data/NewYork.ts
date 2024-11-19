@@ -35,7 +35,7 @@ const NewYork: TourInfo ={
             coordinate: {
                 center: {
                     altitude: 127.66079843926669,
-                    lat: 40.75250193784937,
+                    lat: 40.74350193784937,
                     lng: -73.98308477029207,
                 },
                 range: 630.9535892272834,

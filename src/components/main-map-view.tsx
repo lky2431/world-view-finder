@@ -5,6 +5,7 @@ import Panel from "./panel";
 import LevelInfo from "./level-info";
 import {GameState, useGameStore} from "@/src/stores";
 import { Toaster } from "@/components/ui/sonner"
+import {Modal} from "@/components/ui/animated-modal";
 
 const MainMapView = () => {
     //const {bounds} = useGameStore(selector)
@@ -45,6 +46,7 @@ const MainMapView = () => {
     },[viewProps])
 
     const onAnswer = useCallback((coordinate:Map3DCameraProps)=>{
+        // @ts-ignore
         ref.current?.flyCameraTo({
             endCamera: coordinate,
             durationMillis: 2000
@@ -62,22 +64,12 @@ const MainMapView = () => {
                 boundary={bounds}
             >
             </Map3D>
-            <LevelInfo viewProps={viewProps} onHint={onHint} onAnswer={onAnswer}/>
-            <Toaster/>
+            <Modal>
+                <LevelInfo viewProps={viewProps} onHint={onHint} onAnswer={onAnswer}/>
+            </Modal>
+            <Toaster position="bottom-center" richColors/>
         </>
     );
 };
 
-
 export default MainMapView
-
-
-
-
-/*
-* <Panel props={viewProps} onClick={()=>{
-                setLineCoordinate([
-                    {lat: viewProps.center.lat-0.1, lng: viewProps.center.lng-0.1},
-                    {lat: viewProps.center.lat+0.1, lng: viewProps.center.lng+0.1},
-                ])
-            }}/>*/
