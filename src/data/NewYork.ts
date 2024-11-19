@@ -34,13 +34,13 @@ const NewYork: TourInfo ={
             description: "The Empire State Building is a 102-story Art Deco skyscraper in the Midtown South neighborhood of Manhattan in New York City. The building was designed by Shreve, Lamb & Harmon and built from 1930 to 1931. Its name is derived from \"Empire State\", the nickname of the state of New York.",
             coordinate: {
                 center: {
-                    altitude: 127.66079843926669,
-                    lat: 40.74350193784937,
-                    lng: -73.98308477029207,
+                    altitude: 272.35727606692336,
+                    lat: 40.713082179453906,
+                    lng: -74.01281223492144,
                 },
-                range: 630.9535892272834,
-                heading: -153.56280001382723,
-                tilt: 79.90623092218769,
+                range: 5890.521980007179,
+                heading: -150.46202872352342,
+                tilt: 89.92064346851203,
                 roll: 0
             },
         },

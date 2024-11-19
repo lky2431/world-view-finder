@@ -2,11 +2,15 @@
 
 
 ### Setup
-open .env file, paste your google map api key
+open .env file, replace the api key
+```
+GOOGLE_MAPS_API_KEY="YOUR API KEY"
+```
+
 
 
 run 
 ```shell
-npm run install
+npm install
 npm run start
 ```

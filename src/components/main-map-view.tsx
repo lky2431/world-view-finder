@@ -68,6 +68,7 @@ const MainMapView = () => {
                 <LevelInfo viewProps={viewProps} onHint={onHint} onAnswer={onAnswer}/>
             </Modal>
             <Toaster position="bottom-center" richColors/>
+
         </>
     );
 };
