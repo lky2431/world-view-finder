@@ -7,8 +7,7 @@ import './output.css';
 import {Page, useGameStore} from "@/src/stores";
 import HomePage from "@/src/components/home-page";
 
-const API_KEY =
-  globalThis.GOOGLE_MAPS_API_KEY ?? (process.env.GOOGLE_MAPS_API_KEY as string);
+const API_KEY = (process.env.GOOGLE_MAPS_API_KEY as string);
 
 const App = () => {
 
